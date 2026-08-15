@@ -1,10 +1,8 @@
 import { useCallback, useMemo, useRef, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
 import { experience, profile } from "../data/portfolio";
 import ProjectRow from "../components/collection/ProjectRow";
 import Sidebar from "../components/collection/Sidebar";
-import AboutPanel from "../components/collection/AboutPanel";
 import { useKeyboardNav } from "../components/collection/useKeyboardNav";
 import Greeting from "../components/Greeting";
 import TimeTint from "../components/TimeTint";
@@ -30,7 +28,6 @@ const rowVariants = {
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [aboutOpen, setAboutOpen] = useState(false);
   const [reversed, setReversed] = useState(false);
   const { isNight, toggle: toggleNight } = useAfterHours();
   const rowRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -52,8 +49,6 @@ export default function Home() {
     activeIndex: activeIndex ?? -1,
     onIndexChange: handleIndexChange,
     onOpenResume: () => window.open(profile.resumeUrl, "_blank"),
-    onToggleAbout: () => setAboutOpen((v) => !v),
-    onEscape: () => setAboutOpen(false),
   });
 
   // The hovered project lends its signature color to the site chrome
@@ -66,7 +61,7 @@ export default function Home() {
   return (
     <div
       style={accentVars}
-      className="min-h-screen bg-sand font-sans text-xs leading-normal text-ink"
+      className="min-h-screen bg-sand font-sans text-[13px] leading-normal text-ink"
     >
       {/* Thin top bar; the vertical separator continues down between columns */}
       <motion.header
@@ -75,8 +70,12 @@ export default function Home() {
         transition={{ duration: 0.4 }}
         className="sticky top-0 z-10 grid grid-cols-1 border-b border-sand-border bg-sand md:grid-cols-[7fr_3fr]"
       >
-        <div className="flex items-center justify-between px-2 py-1.5">
-          <span className="uppercase">Selected Work</span>
+        {/* On mobile the about block comes first, so this label moves into
+            the work column (see below) and only the name row remains here. */}
+        <div className="hidden items-center justify-between px-2 py-1.5 md:flex">
+          <span className="text-xs uppercase tracking-[0.08em]">
+            Selected Work
+          </span>
           <button
             type="button"
             onClick={() => setReversed((v) => !v)}
@@ -91,24 +90,7 @@ export default function Home() {
         </div>
         <div className="flex items-center justify-between border-sand-border px-3 py-1.5 md:border-l">
           <span>{profile.name}</span>
-          <div className="flex items-center gap-3">
-            <Greeting />
-            <button
-              type="button"
-              onClick={toggleNight}
-              aria-label={
-                isNight ? "Switch to day mode" : "Switch to after-hours mode"
-              }
-              title={isNight ? "Day mode" : "After-hours mode"}
-              className="text-ink-muted transition-colors hover:text-ink"
-            >
-              {isNight ? (
-                <Sun aria-hidden className="h-3.5 w-3.5" strokeWidth={1.5} />
-              ) : (
-                <Moon aria-hidden className="h-3.5 w-3.5" strokeWidth={1.5} />
-              )}
-            </button>
-          </div>
+          <Greeting />
         </div>
       </motion.header>
 
@@ -118,8 +100,24 @@ export default function Home() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="min-w-0"
+          className="order-2 min-w-0 md:order-1"
         >
+          <div className="flex items-center justify-between border-b border-sand-border px-2 py-1.5 md:hidden">
+            <span className="text-xs uppercase tracking-[0.08em]">
+              Selected Work
+            </span>
+            <button
+              type="button"
+              onClick={() => setReversed((v) => !v)}
+              aria-label="Reverse project order"
+              title="Reverse order"
+              className={`text-ink-muted transition-all duration-300 hover:text-ink ${
+                reversed ? "rotate-180" : ""
+              }`}
+            >
+              ⇅
+            </button>
+          </div>
           {items.map((item, i) => (
             <motion.div
               key={item.id}
@@ -144,11 +142,10 @@ export default function Home() {
         </motion.main>
 
         {/* Sidebar */}
-        <Sidebar hovered={hovered} isNight={isNight} />
+        <Sidebar hovered={hovered} isNight={isNight} onToggleNight={toggleNight} />
       </div>
 
       <TimeTint />
-      <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </div>
   );
 }

@@ -9,13 +9,16 @@ const linkClass =
 type SidebarProps = {
   hovered: Experience | null;
   isNight: boolean;
+  onToggleNight: () => void;
 };
 
-export default function Sidebar({ hovered, isNight }: SidebarProps) {
+export default function Sidebar({ hovered, isNight, onToggleNight }: SidebarProps) {
   return (
-    <aside className="flex flex-col justify-between border-sand-border px-3 py-4 md:sticky md:top-0 md:h-screen md:overflow-y-auto md:border-l">
+    <aside className="order-1 flex flex-col justify-between border-b border-sand-border px-3 py-4 md:sticky md:top-0 md:order-2 md:h-screen md:overflow-y-auto md:border-b-0 md:border-l">
       <div>
-        <p className="text-ink">{profile.role}</p>
+        <p className="text-[15px] font-medium tracking-tight text-ink">
+          {profile.role}
+        </p>
         <div className="mt-4 flex flex-col items-start gap-0.5">
           <a href={`mailto:${profile.email}`} className={linkClass}>
             {profile.email}
@@ -28,12 +31,22 @@ export default function Sidebar({ hovered, isNight }: SidebarProps) {
           >
             LinkedIn
           </a>
+          {/* On mobile the experience block below is hidden, so the CV link
+              lives here instead. */}
+          <a
+            href={profile.resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={`${linkClass} md:hidden`}
+          >
+            CV →
+          </a>
         </div>
 
         <p className="mt-6 max-w-xs leading-relaxed text-ink">{profile.bio}</p>
         <p className="mt-4 text-ink">{profile.status}</p>
 
-        <div className="relative mt-10 border-t border-sand-border pt-6">
+        <div className="relative mt-10 hidden border-t border-sand-border pt-6 md:block">
           <PixelCat className="absolute bottom-full right-4" />
           <ul className="space-y-1">
             {experience.map((e) => {
@@ -52,7 +65,7 @@ export default function Sidebar({ hovered, isNight }: SidebarProps) {
                     >
                       {e.company}
                     </span>
-                    <span className="text-ink-muted">
+                    <span className="tnum text-ink-muted">
                       , {e.location} ({e.period})
                     </span>
                   </a>
@@ -72,14 +85,14 @@ export default function Sidebar({ hovered, isNight }: SidebarProps) {
         </div>
       </div>
 
-      <div className="mt-16 space-y-5">
+      <div className="mt-16 hidden space-y-5 md:block">
         {isNight && (
-          <p className="text-ink-muted">
+          <p className="text-xs text-ink-muted">
             You're seeing the after-hours version of this site.
           </p>
         )}
-        <ShortcutKeys />
-        <LastUpdated className="block text-ink-muted" />
+        <ShortcutKeys isNight={isNight} onToggleNight={onToggleNight} />
+        <LastUpdated className="tnum block text-xs text-ink-muted" />
       </div>
     </aside>
   );

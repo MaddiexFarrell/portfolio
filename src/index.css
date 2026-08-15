@@ -40,10 +40,9 @@
   }
 
   body {
-    @apply bg-sand text-ink font-sans text-xs antialiased;
+    @apply bg-sand text-ink font-sans text-[13px] antialiased;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    font-variant-numeric: slashed-zero tabular-nums;
   }
 
   ::selection {
@@ -53,6 +52,11 @@
 }
 
 @layer components {
+  /* Tabular, slashed-zero figures — for dates and other numerals only */
+  .tnum {
+    font-variant-numeric: slashed-zero tabular-nums;
+  }
+
   .section-pad {
     @apply px-6 sm:px-10 lg:px-16;
   }

@@ -5,19 +5,14 @@ type Options = {
   activeIndex: number;
   onIndexChange: (index: number) => void;
   onOpenResume: () => void;
-  onToggleAbout: () => void;
-  onEscape: () => void;
 };
 
-// Hidden power-user layer: arrow keys move between projects, R opens the
-// résumé, M toggles the "more about me" panel, Escape closes it.
+// Hidden power-user layer: arrow keys move between projects, R opens the résumé.
 export function useKeyboardNav({
   itemCount,
   activeIndex,
   onIndexChange,
   onOpenResume,
-  onToggleAbout,
-  onEscape,
 }: Options) {
   useEffect(() => {
     function handler(e: KeyboardEvent) {
@@ -44,13 +39,6 @@ export function useKeyboardNav({
         case "R":
           onOpenResume();
           break;
-        case "m":
-        case "M":
-          onToggleAbout();
-          break;
-        case "Escape":
-          onEscape();
-          break;
         default:
           break;
       }
@@ -58,5 +46,5 @@ export function useKeyboardNav({
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [itemCount, activeIndex, onIndexChange, onOpenResume, onToggleAbout, onEscape]);
+  }, [itemCount, activeIndex, onIndexChange, onOpenResume]);
 }

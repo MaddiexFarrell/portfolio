@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 // Tiny rendered keycaps that physically depress when the visitor presses the
 // real key — the shortcuts document themselves.
@@ -13,7 +14,6 @@ const GROUPS: { keys: KeyDef[]; label: string }[] = [
     label: "navigate",
   },
   { keys: [{ code: "r", glyph: "R" }], label: "resume" },
-  { keys: [{ code: "m", glyph: "M" }], label: "more" },
 ];
 
 function Keycap({ glyph, pressed }: { glyph: string; pressed: boolean }) {
@@ -30,7 +30,17 @@ function Keycap({ glyph, pressed }: { glyph: string; pressed: boolean }) {
   );
 }
 
-export default function ShortcutKeys({ className }: { className?: string }) {
+type ShortcutKeysProps = {
+  className?: string;
+  isNight: boolean;
+  onToggleNight: () => void;
+};
+
+export default function ShortcutKeys({
+  className,
+  isNight,
+  onToggleNight,
+}: ShortcutKeysProps) {
   const [pressed, setPressed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -78,6 +88,23 @@ export default function ShortcutKeys({ className }: { className?: string }) {
           <span className="text-[10px] text-ink-muted">{group.label}</span>
         </div>
       ))}
+      <div className="flex flex-col items-start gap-1.5">
+        <button
+          type="button"
+          onClick={onToggleNight}
+          aria-label={isNight ? "Switch to day mode" : "Switch to night mode"}
+          className="flex h-6 w-6 items-center justify-center rounded-[3px] border border-sand-border bg-sand text-ink-soft shadow-[0_1.5px_0_0_rgb(var(--c-sand-border))] transition-all duration-100 hover:bg-sand-soft"
+        >
+          {isNight ? (
+            <Sun className="h-3.5 w-3.5" strokeWidth={1.5} />
+          ) : (
+            <Moon className="h-3.5 w-3.5" strokeWidth={1.5} />
+          )}
+        </button>
+        <span className="text-[10px] text-ink-muted">
+          {isNight ? "day" : "night"}
+        </span>
+      </div>
     </div>
   );
 }

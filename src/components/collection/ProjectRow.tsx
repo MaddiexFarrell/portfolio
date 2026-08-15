@@ -3,6 +3,11 @@ import { ArrowUpRight } from "lucide-react";
 import type { Experience } from "../../data/portfolio";
 import Grain from "../Grain";
 
+// Touch-primary devices have no hover, so videos play via IntersectionObserver
+// instead (see effect below).
+const isTouchDevice =
+  typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
+
 type ProjectRowProps = {
   item: Experience;
   isActive: boolean;
@@ -12,19 +17,62 @@ type ProjectRowProps = {
 const ProjectRow = forwardRef<HTMLAnchorElement, ProjectRowProps>(
   ({ item, isActive, onHoverChange }, ref) => {
     const videoRef = useRef<HTMLVideoElement>(null);
+    // Keep the latest callback in a ref so the observer effect doesn't
+    // re-subscribe every render (Home passes an inline function).
+    const onHoverChangeRef = useRef(onHoverChange);
+    useEffect(() => {
+      onHoverChangeRef.current = onHoverChange;
+    });
 
     useEffect(() => {
-      if (videoRef.current && item.video) {
-        // Set the video to show frame at 1 second when loaded
-        videoRef.current.currentTime = 1;
+      const video = videoRef.current;
+      if (video && item.video) {
+        const defaultTime = item.videoStartTime ?? 8;
+        const setDefaultTime = () => {
+          video.currentTime = defaultTime;
+        };
+        
+        // Wait for metadata to load before setting time
+        if (video.readyState >= 1) {
+          // Metadata already loaded
+          setDefaultTime();
+        } else {
+          video.addEventListener('loadedmetadata', setDefaultTime);
+        }
+        
+        return () => {
+          video.removeEventListener('loadedmetadata', setDefaultTime);
+        };
       }
+    }, [item.video, item.videoStartTime]);
+
+    // On touch devices the row ~60% in view plays (and lends its accent
+    // color), pausing again once scrolled away.
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || !item.video || !isTouchDevice) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+            onHoverChangeRef.current?.(true);
+          } else {
+            video.pause();
+            onHoverChangeRef.current?.(false);
+          }
+        },
+        { threshold: 0.6 },
+      );
+      observer.observe(video);
+      return () => observer.disconnect();
     }, [item.video]);
 
     const handleMouseEnter = () => {
       onHoverChange?.(true);
       if (videoRef.current) {
         videoRef.current.currentTime = 0;
-        videoRef.current.play();
+        videoRef.current.play().catch(() => {});
       }
     };
 
@@ -32,7 +80,7 @@ const ProjectRow = forwardRef<HTMLAnchorElement, ProjectRowProps>(
       onHoverChange?.(false);
       if (videoRef.current) {
         videoRef.current.pause();
-        videoRef.current.currentTime = 1;
+        videoRef.current.currentTime = item.videoStartTime ?? 8;
       }
     };
 
@@ -48,19 +96,29 @@ const ProjectRow = forwardRef<HTMLAnchorElement, ProjectRowProps>(
       >
         {/* Cover: video > image > colored placeholder */}
         <div
-          className="relative aspect-[16/10] w-full overflow-hidden"
+          className="relative aspect-[16/9] w-full overflow-hidden"
           style={item.video || item.image ? undefined : { backgroundColor: item.color }}
         >
           {item.video ? (
-            <video
-              ref={videoRef}
-              src={item.video}
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="h-full w-full object-cover"
-            />
+            <>
+              <video
+                ref={videoRef}
+                src={item.video}
+                poster={item.poster}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="h-full w-full object-cover"
+              />
+              {item.logo && (
+                <img
+                  src={item.logo}
+                  alt={`${item.company} logo`}
+                  className="absolute inset-0 m-auto h-14 w-auto max-w-[50%] object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-0"
+                />
+              )}
+            </>
           ) : item.image ? (
             <img
               src={item.image}
@@ -85,8 +143,10 @@ const ProjectRow = forwardRef<HTMLAnchorElement, ProjectRowProps>(
             }`}
           />
 
-          <h3 className="text-ink">{item.company}</h3>
-          <p className="text-ink">{item.period}</p>
+          <h3 className="text-[15px] font-medium tracking-tight text-ink">
+            {item.company}
+          </h3>
+          <p className="tnum mt-0.5 text-xs text-ink-muted">{item.period}</p>
 
           <p className="mt-4 max-w-md leading-relaxed text-ink-muted">
             {item.role} {item.companyDescription}
