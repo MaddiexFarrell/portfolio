@@ -37,7 +37,7 @@ export function useAfterHours() {
     // Swap favicon to match the theme — awake cat for day, sleepy cat for night.
     const favicon = document.getElementById("favicon") as HTMLLinkElement | null;
     if (favicon) {
-      favicon.href = isNight ? "/favicon-night.png" : "/favicon-day.png";
+      favicon.href = isNight ? "/favicon-night.png?v=2" : "/favicon-day.png?v=2";
     }
   }, [isNight]);
 
