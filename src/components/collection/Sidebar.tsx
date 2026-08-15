@@ -31,16 +31,6 @@ export default function Sidebar({ hovered, isNight, onToggleNight }: SidebarProp
           >
             LinkedIn
           </a>
-          {/* On mobile the experience block below is hidden, so the CV link
-              lives here instead. */}
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noreferrer"
-            className={`${linkClass} md:hidden`}
-          >
-            CV →
-          </a>
         </div>
 
         <p className="mt-6 max-w-xs leading-relaxed text-ink">{profile.bio}</p>
@@ -73,15 +63,6 @@ export default function Sidebar({ hovered, isNight, onToggleNight }: SidebarProp
               );
             })}
           </ul>
-
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noreferrer"
-            className={`mt-8 inline-block ${linkClass}`}
-          >
-            CV →
-          </a>
         </div>
       </div>
 
