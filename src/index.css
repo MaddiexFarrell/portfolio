@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -7,6 +7,32 @@
 @layer base {
   :root {
     color-scheme: light;
+    /* Day palette (RGB triplets so Tailwind opacity modifiers keep working) */
+    --c-sand: 255 255 255;
+    --c-sand-soft: 245 245 245;
+    --c-sand-deep: 237 237 237;
+    --c-sand-border: 226 226 226;
+    --c-ink: 17 17 17;
+    --c-ink-soft: 77 77 77;
+    --c-ink-muted: 143 143 143;
+    /* Overridden per-hover in Home.tsx: the hovered project lends its color */
+    --accent: #111111;
+    --selection-fg: #ffffff;
+  }
+
+  /* After-hours: the site's night self, toggled on <html> by useAfterHours.
+     Warm charcoal — lamplight, not server room. */
+  .after-hours {
+    color-scheme: dark;
+    --c-sand: 22 20 18;
+    --c-sand-soft: 32 29 26;
+    --c-sand-deep: 40 37 33;
+    --c-sand-border: 48 44 40;
+    --c-ink: 237 234 230;
+    --c-ink-soft: 180 176 170;
+    --c-ink-muted: 130 126 120;
+    --accent: #edeae6;
+    --selection-fg: #161412;
   }
 
   html {
@@ -14,13 +40,15 @@
   }
 
   body {
-    @apply bg-paper text-ink font-sans antialiased;
+    @apply bg-sand text-ink font-sans text-xs antialiased;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-variant-numeric: slashed-zero tabular-nums;
   }
 
   ::selection {
-    @apply bg-ink text-paper;
+    background-color: var(--accent);
+    color: var(--selection-fg);
   }
 }
 
@@ -34,15 +62,24 @@
   }
 
   .eyebrow {
-    @apply text-xs font-medium uppercase tracking-[0.2em] text-ink-muted;
+    @apply text-xs font-medium uppercase tracking-[0.22em] text-ink-muted;
+  }
+
+  .eyebrow-dark {
+    @apply text-xs font-medium uppercase tracking-[0.22em] text-cream-muted;
   }
 
   .link-underline {
     @apply relative inline-block after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:origin-left hover:after:scale-x-100;
   }
+
+  /* Floating translucent pill used by the nav */
+  .pill {
+    @apply rounded-full border backdrop-blur-md transition-all duration-300;
+  }
 }
 
-/* Thin, refined scrollbar */
+/* Quiet, neutral scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -50,10 +87,10 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #dcdcdc;
+  background: rgb(var(--c-sand-border));
   border-radius: 999px;
-  border: 3px solid #ffffff;
+  border: 3px solid rgb(var(--c-sand));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c4c4c4;
+  background: rgb(var(--c-ink-muted));
 }
