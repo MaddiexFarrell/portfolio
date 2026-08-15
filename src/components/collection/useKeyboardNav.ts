@@ -4,15 +4,17 @@ type Options = {
   itemCount: number;
   activeIndex: number;
   onIndexChange: (index: number) => void;
-  onOpenResume: () => void;
+  onOpenEmail: () => void;
+  onOpenLinkedIn: () => void;
 };
 
-// Hidden power-user layer: arrow keys move between projects, R opens the résumé.
+// Hidden power-user layer: arrow keys move between projects, E opens email, L opens LinkedIn.
 export function useKeyboardNav({
   itemCount,
   activeIndex,
   onIndexChange,
-  onOpenResume,
+  onOpenEmail,
+  onOpenLinkedIn,
 }: Options) {
   useEffect(() => {
     function handler(e: KeyboardEvent) {
@@ -35,9 +37,13 @@ export function useKeyboardNav({
           onIndexChange(prev);
           break;
         }
-        case "r":
-        case "R":
-          onOpenResume();
+        case "e":
+        case "E":
+          onOpenEmail();
+          break;
+        case "l":
+        case "L":
+          onOpenLinkedIn();
           break;
         default:
           break;
@@ -46,5 +52,5 @@ export function useKeyboardNav({
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [itemCount, activeIndex, onIndexChange, onOpenResume]);
+  }, [itemCount, activeIndex, onIndexChange, onOpenEmail, onOpenLinkedIn]);
 }

@@ -13,7 +13,8 @@ const GROUPS: { keys: KeyDef[]; label: string }[] = [
     ],
     label: "navigate",
   },
-  { keys: [{ code: "r", glyph: "R" }], label: "resume" },
+  { keys: [{ code: "e", glyph: "E" }], label: "email" },
+  { keys: [{ code: "l", glyph: "L" }], label: "linkedin" },
 ];
 
 function Keycap({ glyph, pressed }: { glyph: string; pressed: boolean }) {

@@ -48,7 +48,8 @@ export default function Home() {
     itemCount: items.length,
     activeIndex: activeIndex ?? -1,
     onIndexChange: handleIndexChange,
-    onOpenResume: () => window.open(profile.resumeUrl, "_blank"),
+    onOpenEmail: () => window.location.href = `mailto:${profile.email}`,
+    onOpenLinkedIn: () => window.open(profile.linkedin, "_blank"),
   });
 
   // The hovered project lends its signature color to the site chrome
