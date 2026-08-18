@@ -96,8 +96,7 @@ export const experience: Experience[] = [
     aside: "Internal tools don't get much love — I tried to give them some anyway.",
     href: "https://www.amazon.com",
     color: "#FF9900",
-    video: "/amazon-hero.mp4",
-    poster: "/amazon-poster.jpg",
+    image: "/amazon-hero.png",
   },
   {
     id: "blizzard",
