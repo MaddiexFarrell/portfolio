@@ -109,7 +109,11 @@ const ProjectRow = forwardRef<HTMLAnchorElement, ProjectRowProps>(
                 loop
                 playsInline
                 preload="metadata"
-                className="h-full w-full object-cover"
+                className={`h-full w-full object-cover ${
+                  item.id === "vultron"
+                    ? "blur-[1px] saturate-[0.9] transition-all duration-300 group-hover:blur-0 group-hover:saturate-100"
+                    : ""
+                }`}
               />
               {item.logo && (
                 <img
