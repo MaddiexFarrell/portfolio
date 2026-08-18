@@ -4,11 +4,11 @@
 
 export const profile = {
   name: "Maddie Farrell",
-  role: "Product Designer & Design Engineer",
+  role: "Product Designer",
   email: "maddiefarrell7@gmail.com",
   linkedin: "https://www.linkedin.com/in/madeline-farrell7/",
-  bio: "Product designer and design engineer, based in San Francisco. She designs, builds, and ships with vigor.",
-  status: "Currently building in San Francisco :)",
+  bio: "Product designer focused on thoughtful product experiences, working across design and code to bring ideas into production.",
+  status: "Currently designing in San Francisco :)",
   // Drop a resume.pdf into /public for the "R" shortcut and this link to work.
   resumeUrl: "/resume.pdf",
 };
