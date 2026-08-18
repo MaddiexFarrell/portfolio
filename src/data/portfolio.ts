@@ -107,7 +107,6 @@ export const experience: Experience[] = [
     aside: "My first taste of designing something players would actually see and feel.",
     href: "https://www.blizzard.com",
     color: "#2D9CDB",
-    video: "/blizzard-hero.mp4",
-    poster: "/blizzard-poster.jpg",
+    image: "/blizzard-hero.png",
   },
 ];
