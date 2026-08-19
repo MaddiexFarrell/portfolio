@@ -90,7 +90,7 @@ export const experience: Experience[] = [
   {
     id: "amazon",
     company: "Amazon",
-    location: "Seattle",
+    location: "San Francisco",
     period: "2020 — 2021",
     role: "Product designer. Worked on internal tooling.",
     aside: "Internal tools don't get much love — I tried to give them some anyway.",
